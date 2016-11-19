@@ -57,7 +57,8 @@
           }
           
       </style>
-      
+<!--      <script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script>-->
+
       <script>
       
           function myFunction(postname)
@@ -65,39 +66,38 @@
               console.log("I am in ajax");   
               var stringy = postname.toString();
               console.log("Stringy:" + stringy);
+              
               $.ajax({
+                  url: "/posting/",
                   type: "POST",
-                  url: "/postajax",
-                  data: stringy,
+                  data: {'post': stringy},
                   dataType: "json",
-                  success: function(payload){
-                      console.log("AJAX");
-//                      var ele = document.getElementById("postdetails");
-//                      ele.style.display = "block";
+                  contentType: "application/json; charset=utf-8",
+//                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                  success: function(json){
                       
-                       var ele = document.getElementById("posti");
-                       ele.innerHTML = '<li style="width:auto;height:auto;"><div style="position:relative;width:200px;"><div style="position:absolute;top:2px;left:2px;"><img src="{% static 'PostAnalysis/images/img.jpg' %}" style="width:40px; height:40px;" alt="img" /></div><div style="position:relative;top:2px;left:45px;"><span style="font-weight:bold;color:#2471A3;">John Smith</span><span style="position:relative;top:2px;left:280px;font-weight:bold;"><i>3 mins ago</i></span></div><div style="position:relative;top:6px;left:48px;"><span style="float:left;">{{line}}</span></div></div></li>';
-        
-                       
-                       
-                       
-//<li style="width:auto;height:auto;"><div style="position:relative;width:200px;"><div style="position:absolute;top:2px;left:2px;">
-//                                      <img src="{% static 'PostAnalysis/images/img.jpg' %}" style="width:40px; height:40px;" alt="img" />
-//                                      </div>  
-//                                  <div style="position:relative;top:2px;left:45px;">
-//                                  <span style="font-weight:bold;color:#2471A3;">John Smith</span>
-//                                  <span style="position:relative;top:2px;left:280px;font-weight:bold;"><i>3 mins ago</i></span>
-//                                  </div>
-//                                  <div style="position:relative;top:6px;left:48px;"><span style="float:left;">{{line}}</span></div>
-//                                  </div>
-//                          
-//                    </li>
-                       
-                       
-                       
-                       
-                       
-                       
+                       alert('in it!');
+                       console.log(json);
+                       console.log(json["post"][0]);
+                      console.log(json["post"].length);
+                      
+
+                      
+                      for (i = 0; i < json["post"].length; i++) {
+                          
+                          var tt = json["post"][i];
+                          console.log(tt);
+                          var div = new Array(6);
+                          $("#posti").find(".posty").text(json["post"][i]);
+                          var ht = $("#posti").html();
+                          console.log(ht);
+                          $("#dupposti").append(ht);
+                      }
+
+                      
+                  },
+                  error: function(exception){
+                      alert('error');
                   }
               });
           }
@@ -408,7 +408,7 @@
                               <ul class="list-inline">
                               <li>
                                 <img src="{% static 'PostAnalysis/images/img.jpg' %}" class="avatar" alt="Avatar" style="margin-right:10px;width:30px;height:30px;">
-                                   <a href="" onclick="myFunction('post1')">its really annoying </a>
+                                   <a href="javascript:;" onclick="myFunction('post1')">its really annoying </a>
                                     <br />
                                     <small>01.01.2015</small>
                                     <small>6:15pm</small>
@@ -455,7 +455,7 @@
                               <ul class="list-inline">
                               <li>
                                 <img src="{% static 'PostAnalysis/images/img3.jpg' %}" class="avatar" alt="Avatar" style="margin-right:10px;width:30px;height:30px;">
-                                   <a href="" onclick="myFunction('post2')">Very tedious job </a>
+                                   <a href="javascript:;" onclick="myFunction('post2')">Very tedious job </a>
                                     <br />
                                     <small>01.01.2015</small>
                                     <small>7:15pm</small>
@@ -502,7 +502,7 @@
                               <ul class="list-inline">
                               <li>
                                 <img src="{% static 'PostAnalysis/images/img4.jpg' %}" class="avatar" alt="Avatar" style="margin-right:10px;width:30px;height:30px;">
-                                   <a href="" onclick="myFunction('post3')">Great day ! feeling awesome Got my money </a>
+                                   <a href="javascript:;" onclick="myFunction('post3')">Great day ! feeling awesome Got my money </a>
                                     <br />
                                     <small>01.01.2015</small>
                                     <small>8:15pm</small>
@@ -548,7 +548,7 @@
                               <ul class="list-inline">
                               <li>
                                 <img src="{% static 'PostAnalysis/images/img7.jpg' %}" class="avatar" alt="Avatar" style="margin-right:10px;width:30px;height:30px;">
-                                   <a href="" onclick="myFunction('post4')">Not a good move  by Modi, dope! </a>
+                                   <a href="javascript:;" onclick="myFunction('post4')">Not a good move  by Modi, dope! </a>
                                     <br />
                                     <small>01.01.2015</small>
                                     <small>8:45pm</small>
@@ -594,7 +594,7 @@
                               <ul class="list-inline">
                               <li>
                                 <img src="{% static 'PostAnalysis/images/img.jpg' %}" class="avatar" alt="Avatar" style="margin-right:10px;width:30px;height:30px;">
-                                   <a href="" onclick="myFunction('post5')">Got my cheerleader! Whooo </a>
+                                   <a href="javascript:;" onclick="myFunction('post5')">Got my cheerleader! Whooo </a>
                                     <br />
                                     <small>01.01.2015</small>
                                     <small>9:15pm</small>
@@ -637,6 +637,7 @@
                         
                           
                          
+                        
 
                       </tbody>
                     </table>
@@ -729,12 +730,11 @@
                     <div class="col-md-6 col-lg-6 col-sm-12" id="postcomments">
                         
                                <div class="x_content">
-                  <ul class="list-unstyled msg_list" id="posti">
+                  <ul class="list-unstyled msg_list" id="posti" style="display:none;">
                       
 <!--
                 {% for line in post %}
                     <li style="width:auto;height:auto;">
-                        
                                   <div style="position:relative;width:200px;">
                                   <div style="position:absolute;top:2px;left:2px;">
                                       <img src="{% static 'PostAnalysis/images/img.jpg' %}" style="width:40px; height:40px;" alt="img" />
@@ -749,7 +749,33 @@
                     </li>
                 {% endfor %}
 -->
+                      
+                      
+                      
+                      <li style="width:auto;height:auto;">
+                                  <div style="position:relative;width:200px;">
+                                  <div style="position:absolute;top:2px;left:2px;">
+                                      <img src="{% static 'PostAnalysis/images/img.jpg' %}" style="width:40px; height:40px;" alt="img" />
+                                      </div>  
+                                  <div style="position:relative;top:2px;left:45px;">
+                                  <span style="font-weight:bold;color:#2471A3;">John Smith</span>
+                                  <span style="position:relative;top:2px;left:280px;font-weight:bold;"><i>3 mins ago</i></span>
+                                  </div>
+                                  <div style="position:relative;top:6px;left:48px;"><span class="posty" style="float:left;">{{line}}</span></div>
+                                  </div>
+                          
+                    </li>
+                    
+                                                   
+                                                   
+                                                   
+                                                   
+                                
+        
                   </ul>
+                                   
+                   <ul class="list-unstyled msg_list" id="dupposti"></ul>
+               
                                    
                 </div>
 

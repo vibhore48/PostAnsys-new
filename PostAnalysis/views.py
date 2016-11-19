@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from senti_classifier import polarity_scores
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect
 import json
 from django.http import HttpResponse
 # Create your views here.
@@ -8,13 +9,15 @@ import os
 #	print os.path.dirname 
 
 
+##@csrf_protect
+#def postanalysis(request):
+#    return render(request, 'PostAnalysis/PostAnsys.html', {})
 
+#@csrf_protect
 def postanalysis(request):
-    return render(request, 'PostAnalysis/PostAnsys.html', {})
-
-
-def postajax(request):
+    print "before if statement"
     if request.method == 'POST' and request.is_ajax():
+        print "in here"
         texty = request.POST.get('stringy')
         if texty == "post1":
             comments_post1 = []
@@ -49,8 +52,9 @@ def postajax(request):
             print comments_post1
 #            return render(request, 'PostAnalysis/PostAnsys.html', {'post': comments_post1})
             return HttpResponse(json.dumps({'post': comments_post1}), content_type="application/json")
-#    else:
-#        return render(request, 'PostAnalysis/PostAnsys.html', {})
+    else:
+        print "i am in else"
+        return render(request, 'PostAnalysis/PostAnsys.html', {})
 	
 	
 	
