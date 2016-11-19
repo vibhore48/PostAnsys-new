@@ -74,9 +74,22 @@
                   dataType: "json",
                   contentType: "application/json; charset=utf-8",
 //                  csrfmiddlewaretoken: '{{ csrf_token }}',
+
+                  beforeSend: function() {
+                                 $("#loader-body").show();
+                                 $('html, body').css({
+                                        overflow: 'hidden',
+                                        height: '100%'
+                                    });
+                            },
                   success: function(json){
                       
-                       alert('in it!');
+                       $("#loader-body").hide();
+                       $('html, body').css({
+                                overflow: 'auto',
+                                height: 'auto'
+                            });
+                       <!--alert('in it!');-->
                        console.log(json);
                        console.log(json["post"][0]);
                       console.log(json["post"].length);
@@ -117,9 +130,94 @@
           }
           
       </script>
+      <style>
+          @import url(http://fonts.googleapis.com/css?family=Raleway:400,800,200);
+            <!--body {-->
+              <!--background-color: #3498db;-->
+            <!--}-->
+
+            html {
+                  height: 100%;
+                  margin:         0;
+                    padding:        0;
+                }
+                body {
+                  min-height: 100%;
+                  margin:         0;
+                  padding:        0;
+                }
+
+            #loader-body{
+               background-color: #3498db;
+               z-index: 5;
+               position: absolute;
+                width: 100%;
+                height: 100%;
+                left: 0;
+                right: 0;
+            }
+
+            #loader-container {
+              width: 200px;
+              height: 200px;
+              color: white;
+              margin: 0 auto;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              margin-right: -50%;
+              transform: translate(-50%, -50%);
+              border: 5px solid #3498db;
+              border-radius: 50%;
+              -webkit-animation: borderScale 1s infinite ease-in-out;
+              animation: borderScale 1s infinite ease-in-out;
+
+            }
+
+            #loadingText {
+              font-family: 'Raleway', sans-serif;
+              font-weight: thin;
+              font-size: 2em;
+              position: absolute;
+              top: 50%;
+              left: 63%;
+              margin-right: -50%;
+              transform: translate(-50%, -50%);
+            }
+
+            @-webkit-keyframes borderScale {
+              0% {
+                border: 5px solid white;
+              }
+              50% {
+                border: 25px solid #3498db;
+              }
+              100% {
+                border: 5px solid white;
+              }
+            }
+
+            @keyframes borderScale {
+              0% {
+                border: 5px solid white;
+              }
+              50% {
+                border: 25px solid #3498db;
+              }
+              100% {
+                border: 5px solid white;
+              }
+            }
+      </style>
   </head>
 
     <body class="nav-md">
+
+    <div id="loader-body" class="container-fluid" style="display:none">
+    <div id="loader-container">
+        <p id="loadingText">Preparing Insights...</p>
+      </div>
+    </div>
     <div class="container body">
       <div class="main_container">
         <div class="col-md-3 left_col">
