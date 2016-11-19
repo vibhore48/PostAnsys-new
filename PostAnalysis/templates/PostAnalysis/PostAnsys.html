@@ -66,11 +66,11 @@
               console.log("I am in ajax");   
               var stringy = postname.toString();
               console.log("Stringy:" + stringy);
-              
+
               $.ajax({
                   url: "/posting/",
                   type: "POST",
-                  data: {'post': stringy},
+                  data: {'posting': stringy},
                   dataType: "json",
                   contentType: "application/json; charset=utf-8",
 //                  csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -93,6 +93,20 @@
                           console.log(ht);
                           $("#dupposti").append(ht);
                       }
+
+                      console.log("pos" + json["pos"]);
+                      console.log("neg" + json["neg"]);
+
+                      $(".posi").text("Positive:- " + json["pos"]);
+                      $(".negi").text("Negative:- " + json["neg"]);
+
+                      if (json["pos"]<json["neg"]) {
+                                  $(".respost").text("Negative").css({"color":"red"});
+                             }
+                      else {
+                                 $(".respost").text("Positive").css({"color":"Green"});
+                           }
+
 
                       
                   },
@@ -861,7 +875,7 @@
                  
                         <div class="col-md-12">
 
-                          <h1 class="text-center" style="color:green;">Positive Score : 2.0</h1>
+                          <h1 class="text-center posi" style="color:green;"></h1>
                         </div> 
                     </div> 
                     <br>
@@ -870,7 +884,7 @@
                         
                         <div class="col-md-12">
  
-                            <h1 class="text-center" style="color:red;">Negative Score: 4.375 </h1>                
+                            <h1 class="text-center negi" style="color:red;"></h1>
                       </div>
                     
                     
@@ -882,7 +896,7 @@
 
                       <div class="col-md-12">
 "
-                       <h1 class="text-center">Post : <span style="color:red;">Negative </span></h1>
+                       <h1 class="text-center">Post : <span class="respost"></span></h1>
                            
                       </div>
                     </div>

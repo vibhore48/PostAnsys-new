@@ -15,24 +15,31 @@ import os
 
 #@csrf_protect
 def postanalysis(request):
-    print "before if statement"
+    # print "before if statement"
+    # print "not dummy"
     if request.method == 'POST' and request.is_ajax():
-        print "in here"
-        texty = request.POST.get('stringy')
+        # print "in here"
+        # texty = request.POST.get('posting')
+        post, texty = request.body.split('=')
+        print post, texty
+        # print "texty: -" + texty
+
         if texty == "post1":
             comments_post1 = []
             with open('C:\\Users\\Vibhore\\Desktop\\PostAnsys\\PostAnalysis\\post1-reviews.txt', 'r') as f:
                 for line in f.readlines():
                     comments_post1.append(line.strip('\n'))
             print comments_post1
+            pos, neg = polarity_scores(comments_post1)
+            print pos, neg
 #            return render(request, 'PostAnalysis/PostAnsys.html', {'post': comments_post1})
-            return HttpResponse(json.dumps({'post': comments_post1}), content_type="application/json")
+            return HttpResponse(json.dumps({'post': comments_post1, 'pos': pos, 'neg': neg}), content_type="application/json")
         elif texty == "post2":
             comments_post2 = []
             with open('C:\\Users\\Vibhore\\Desktop\\PostAnsys\\PostAnalysis\\post2-reviews.txt', 'r') as f:
                 for line in f.readlines():
                     comments_post2.append(line.strip('\n'))
-            print comments_post2    
+            print comments_post2
 #            return render(request, 'PostAnalysis/PostAnsys.html', {'post': comments_post2})
             return HttpResponse(json.dumps({'post': comments_post2}), content_type="application/json")
         elif texty == "post3":
@@ -53,7 +60,7 @@ def postanalysis(request):
 #            return render(request, 'PostAnalysis/PostAnsys.html', {'post': comments_post1})
             return HttpResponse(json.dumps({'post': comments_post1}), content_type="application/json")
     else:
-        print "i am in else"
+        # print "i am in else"
         return render(request, 'PostAnalysis/PostAnsys.html', {})
 	
 	
