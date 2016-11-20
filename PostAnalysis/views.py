@@ -44,6 +44,7 @@ def postanalysis(request):
             print pos, neg
 #            return render(request, 'PostAnalysis/PostAnsys.html', {'post': comments_post2})
             return HttpResponse(json.dumps({'post': comments_post2, 'pos': pos, 'neg': neg}), content_type="application/json")
+
         elif texty == "post3":
             comments_post3 = []
             with open('C:\\Users\\Vibhore\\Desktop\\PostAnsys\\PostAnalysis\\post3-reviews.txt', 'r') as f:
@@ -54,6 +55,28 @@ def postanalysis(request):
             print pos, neg
 #            return render(request, 'PostAnalysis/PostAnsys.html', {'post': comments_post3})
             return HttpResponse(json.dumps({'post': comments_post3, 'pos': pos, 'neg': neg}), content_type="application/json")
+
+        elif texty == "post4":
+            comments_post4 = []
+            with open('C:\\Users\\Vibhore\\Desktop\\PostAnsys\\PostAnalysis\\post4-reviews.txt', 'r') as f:
+                for line in f.readlines():
+                    comments_post4.append(line.strip('\n'))
+            print comments_post4
+            pos, neg = polarity_scores(comments_post4)
+            print pos, neg
+#            return render(request, 'PostAnalysis/PostAnsys.html', {'post': comments_post3})
+            return HttpResponse(json.dumps({'post': comments_post4, 'pos': pos, 'neg': neg}), content_type="application/json")
+
+        elif texty == "post5":
+            comments_post5 = []
+            with open('C:\\Users\\Vibhore\\Desktop\\PostAnsys\\PostAnalysis\\post5-reviews.txt', 'r') as f:
+                for line in f.readlines():
+                    comments_post5.append(line.strip('\n'))
+            print comments_post5
+            pos, neg = polarity_scores(comments_post5)
+            print pos, neg
+#            return render(request, 'PostAnalysis/PostAnsys.html', {'post': comments_post3})
+            return HttpResponse(json.dumps({'post': comments_post5, 'pos': pos, 'neg': neg}), content_type="application/json")
 
         else:
             comments_post1 = []
