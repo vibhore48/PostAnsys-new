@@ -40,16 +40,20 @@ def postanalysis(request):
                 for line in f.readlines():
                     comments_post2.append(line.strip('\n'))
             print comments_post2
+            pos, neg = polarity_scores(comments_post2)
+            print pos, neg
 #            return render(request, 'PostAnalysis/PostAnsys.html', {'post': comments_post2})
-            return HttpResponse(json.dumps({'post': comments_post2}), content_type="application/json")
+            return HttpResponse(json.dumps({'post': comments_post2, 'pos': pos, 'neg': neg}), content_type="application/json")
         elif texty == "post3":
             comments_post3 = []
             with open('C:\\Users\\Vibhore\\Desktop\\PostAnsys\\PostAnalysis\\post3-reviews.txt', 'r') as f:
                 for line in f.readlines():
                     comments_post3.append(line.strip('\n'))
             print comments_post3
+            pos, neg = polarity_scores(comments_post3)
+            print pos, neg
 #            return render(request, 'PostAnalysis/PostAnsys.html', {'post': comments_post3})
-            return HttpResponse(json.dumps({'post': comments_post3}), content_type="application/json")
+            return HttpResponse(json.dumps({'post': comments_post3, 'pos': pos, 'neg': neg}), content_type="application/json")
 
         else:
             comments_post1 = []

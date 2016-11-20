@@ -37,9 +37,11 @@
 
     <!-- Custom Theme Style -->
     <link href="{% static 'PostAnalysis/css/custom.min.css' %}" rel="stylesheet">
+
+
       
       <style>
-      
+
           #postdetails img, #posttable img {
               
               width:24px;
@@ -52,7 +54,7 @@
           #postcomments {
               
               overflow-y: scroll;
-              height:240px;
+              height:400px;
               
           }
           
@@ -84,44 +86,135 @@
                             },
                   success: function(json){
                       
-                       $("#loader-body").hide();
-                       $('html, body').css({
-                                overflow: 'auto',
-                                height: 'auto'
-                            });
-                       <!--alert('in it!');-->
-                       console.log(json);
-                       console.log(json["post"][0]);
-                      console.log(json["post"].length);
-                      
+                                           $("#loader-body").hide();
+                                           $("#postdetails").show();
+                                           $("#postinsights").show();
+                                           $('html, body').css({
+                                                    overflow: 'auto',
+                                                    height: 'auto'
+                                                });
+                                           <!--alert('in it!');-->
+                                           console.log(json);
+                                           console.log(json["post"][0]);
+                                          console.log(json["post"].length);
 
-                      
-                      for (i = 0; i < json["post"].length; i++) {
-                          
-                          var tt = json["post"][i];
-                          console.log(tt);
-                          var div = new Array(6);
-                          $("#posti").find(".posty").text(json["post"][i]);
-                          var ht = $("#posti").html();
-                          console.log(ht);
-                          $("#dupposti").append(ht);
-                      }
+                                          $("#posti").remove("#dupposti");
 
-                      console.log("pos" + json["pos"]);
-                      console.log("neg" + json["neg"]);
+                                          for (i = 0; i < json["post"].length; i++) {
 
-                      $(".posi").text("Positive:- " + json["pos"]);
-                      $(".negi").text("Negative:- " + json["neg"]);
+                                              var tt = json["post"][i];
+                                              console.log(tt);
+                                              <!--var div = new Array(6);-->
+                                              $("#posti").find(".posty").text(json["post"][i]);
+                                              var ht = $("#posti").html();
+                                              console.log(ht);
+                                              $("#dupposti").append(ht);
+                                          }
 
-                      if (json["pos"]<json["neg"]) {
-                                  $(".respost").text("Negative").css({"color":"red"});
-                             }
-                      else {
-                                 $(".respost").text("Positive").css({"color":"Green"});
-                           }
+                                          console.log("pos" + json["pos"]);
+                                          console.log("neg" + json["neg"]);
+
+                                          var total = json["pos"] + json["neg"];
+                                          var posperc = ((json["pos"]/total)*100).toFixed(2);
+                                          var negperc = ((json["neg"]/total)*100).toFixed(2);
+
+                                          $(".posi").text(posperc + "%");
+                                          $(".negi").text(negperc + "%");
+
+                                          if (json["pos"]<json["neg"]) {
+                                                      $(".poscolor").css({"background-color":"#F5B7B1"});
+                                                      $(".respost").text("Negative").css({"color":"red"});
+                                                 }
+                                          else {
+                                                     $(".poscolor").css({"background-color":"#ABEBC6"});
+                                                     $(".respost").text("Positive").css({"color":"Green"});
+                                               }
 
 
-                      
+
+
+                                         var ctx = document.getElementById("myPieChart").getContext('2d');
+
+                                         var daataa = new Array(2);
+                                         daataa[0] = json["neg"];
+                                         daataa[1] = json["pos"];
+
+                                         var PieData = {
+                                                        labels: [
+                                                            "Negative",
+                                                            "Positive",
+                                                        ],
+                                                        datasets: [
+                                                            {
+                                                                data: daataa,
+                                                                backgroundColor: [
+                                                                    "#EC7063",
+                                                                    "#58D68D",
+
+                                                                ],
+                                                                hoverBackgroundColor: [
+                                                                    "#E74C3C",
+                                                                    "#28B463",
+
+                                                                ]
+                                                            }]
+                                                    };
+
+
+
+                                        // For a pie chart
+                                        var myPieChart = new Chart(ctx,{
+                                            type: 'pie',
+                                            data: PieData,
+
+                                        });
+
+
+
+                                        var ctx = document.getElementById("myBarChart").getContext('2d');
+                                        var BarData = {
+                                                    labels: ["Negative", "Positive",],
+                                                    datasets: [
+                                                        {
+                                                            label: "Visuals",
+                                                            backgroundColor: [
+                                                                'rgba(255, 99, 132, 0.2)',
+                                                                'rgba(54, 162, 235, 0.2)',
+                                                                <!--'rgba(255, 206, 86, 0.2)',-->
+                                                                <!--'rgba(75, 192, 192, 0.2)',-->
+                                                                <!--'rgba(153, 102, 255, 0.2)',-->
+                                                                <!--'rgba(255, 159, 64, 0.2)'-->
+                                                            ],
+                                                            borderColor: [
+                                                                'rgba(255,99,132,1)',
+                                                                'rgba(54, 162, 235, 1)',
+                                                                <!--'rgba(255, 206, 86, 1)',-->
+                                                                <!--'rgba(75, 192, 192, 1)',-->
+                                                                <!--'rgba(153, 102, 255, 1)',-->
+                                                                <!--'rgba(255, 159, 64, 1)'-->
+                                                            ],
+                                                            borderWidth: 1,
+                                                            data: daataa,
+                                                        }
+                                                    ]
+                                                };
+
+                                                var options = {
+                                                            legend: {
+                                                                display: false
+                                                            }
+                                                          }
+
+                                           // For a bar chart
+                                        var myBarChart = new Chart(ctx,{
+                                            type: 'bar',
+                                            data: BarData,
+                                            options: options,
+
+                                        });
+
+
+
                   },
                   error: function(exception){
                       alert('error');
@@ -209,6 +302,14 @@
               }
             }
       </style>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.js"
+              integrity="sha256-1qeNeAAFNi/g6PFChfXQfa6CQ8eXoHXreohinZsoJOQ=" crossorigin="anonymous"></script>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.js"
+              integrity="sha256-HptdWaetAoQSrTP9GZVVxKovdIq1C3MmKazLYQ7JnL4=" crossorigin="anonymous"></script>
+
+
   </head>
 
     <body class="nav-md">
@@ -453,24 +554,7 @@
 
            <!-- page content -->
            <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top:0px;margin-bottom:0px;">
-<!--
-            <div class="page-title">
-              <div class="title_left">
-                <h3>Projects <small>Listing design</small></h3>
-              </div>
 
-              <div class="title_right">
-                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Go!</button>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
--->
 
             <div class="clearfix"></div>
 
@@ -479,21 +563,7 @@
                 <div class="x_panel">
                   <div class="x_title">
                     <h2>All Posts</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
+
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
@@ -772,74 +842,22 @@
 
 
            <!-- page content -->
-           <div class="col-md-12 col-sm-12 col-xs-12" id="postdetails">
+           <div class="col-md-12 col-sm-12 col-xs-12" id="postdetails" style="display:none;">
 
             <div class="clearfix"></div>
 
             <div class="row">
               <div class="col-md-12">
-                <div class="x_panel">
+                <div class="x_panel" style="height:500px;">
                   <div class="x_title">
                     <h2>Post Details</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
+
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
 
-                    <div class="col-md-6 col-lg-6 col-sm-12" style="border-right:2px solid #D0D3D4;">
-
-                        <ul class="list-inline">
-                              <li>
-                              
-                                <img src="{% static 'PostAnalysis/images/img.jpg' %}" class="avatar" alt="Avatar" style="margin-right:10px;width:48px;height:48px;">
-                                   <span style="font-size:16px;">its really annoying </span>
-                                    <br />
-                                    <small>01.01.2015</small>
-                                    <small>6:15pm</small>
-                              </li>
-                            <br><br>
-                            <li><h2>I find this very annoying after college<br> to go banks to exchange money by waiting in a queue for<br>as long as 2 hours daily. Phew!</h2></li>
-                            <br><br>
-                            
-                            <hr style="border: solid 1px #D0D3D4 !important;">
-                               <ul class="list-inline" id="postdetails">
-                              <li>
-                                <img src="{% static 'PostAnalysis/images/thumbsup.svg' %}" class="avatar" alt="Avatar">
-                                 <small style="font-size:15px;">45</small> 
-                              </li>
-                                   
-                                    <li>
-                                <img src="{% static 'PostAnalysis/images/reply.svg' %}" class="avatar" alt="Avatar">
-                                 <small style="font-size:15px;">45</small> 
-                              </li>
-                                   
-                                    <li>
-                                <img src="{% static 'PostAnalysis/images/comment.svg' %}" class="avatar" alt="Avatar">
-                                 <small style="font-size:15px;">15</small> 
-                              </li>
-                            </ul>
                       
-                            </ul>
-
-                    </div>
-                      
-                      
-                      
-                    <div class="col-md-6 col-lg-6 col-sm-12" id="postcomments">
+                    <div class="col-md-12 col-lg-12 col-sm-12" id="postcomments">
                         
                                <div class="x_content">
                   <ul class="list-unstyled msg_list" id="posti" style="display:none;">
@@ -864,25 +882,20 @@
                       
                       
                       
-                      <li style="width:auto;height:auto;">
+                      <li style="width:auto;min-height:auto;padding:10px;">
                                   <div style="position:relative;width:200px;">
                                   <div style="position:absolute;top:2px;left:2px;">
                                       <img src="{% static 'PostAnalysis/images/img.jpg' %}" style="width:40px; height:40px;" alt="img" />
                                       </div>  
                                   <div style="position:relative;top:2px;left:45px;">
                                   <span style="font-weight:bold;color:#2471A3;">John Smith</span>
-                                  <span style="position:relative;top:2px;left:280px;font-weight:bold;"><i>3 mins ago</i></span>
+                                  <span style="position:relative;top:2px;left:800px;font-weight:bold;"><i>3 mins ago</i></span>
                                   </div>
-                                  <div style="position:relative;top:6px;left:48px;"><span class="posty" style="float:left;">{{line}}</span></div>
+                                  <div style="position:relative;top:6px;left:48px;"><span class="posty" style="float:left;"></span></div>
                                   </div>
                           
                     </li>
-                    
-                                                   
-                                                   
-                                                   
-                                                   
-                                
+
         
                   </ul>
                                    
@@ -891,18 +904,6 @@
                                    
                 </div>
 
-<!--
-                    <div class="col-md-12">
-                      <h4>Labels and badges</h4>
-                      <span class="label label-default">Default</span>
-                      <span class="label label-primary">Primary</span>
-                      <span class="label label-success">Success</span>
-                      <span class="label label-info">Info</span>
-                      <span class="label label-warning">Warning</span>
-                      <span class="label label-danger">Danger</span>
-                      <span class="badge badge-success">42</span>
-                    </div>
--->
                   </div>
                 </div>
               </div>
@@ -922,88 +923,54 @@
             <!-- page content -->
             <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top:0px;margin-bottom:0px;">
 
-<!--
-            <div class="page-title">
-              <div class="title_left">
-                <h3>Pricing Tables</h3>
-              </div>
-
-              <div class="title_right">
-                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Go!</button>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
--->
-<!--
-
-            <div class="clearfix"></div>
--->
-
-
-<!--              <div cass="col-md-12 col-sm-12 col-xs-12">-->
-                <div class="x_panel" style="height:600px;">
+                <div class="x_panel" id="postinsights" style="display:none;height:auto;">
                   <div class="x_title">
                     <h2>Post Insights</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li style="float:right;"><a data-toggle="collapse" href="#collapsable" aria-expanded="false"><i id="iconi" class="fa fa-chevron-up"></i></a>
-                      </li>
-<!--                       <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li> -->
-<!--                       <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li> -->
-                    </ul>
+
                     <div class="clearfix"></div>
                   </div>
 
                  <br><br><br>
                     <div class="row">
-                 
-                        <div class="col-md-12">
 
-                          <h1 class="text-center posi" style="color:green;"></h1>
+                        <h2 style="margin-left:10px;font-size:20px;">Comment Classification :-</h2>
+                        <div class="col-md-6" style="background-color:#ECF0F1;border:5px solid white;padding:20px;">
+                          <h2 class="text-center " style="color:green;">Positiveness</h2><br>
+                          <h2 class="text-center posi" style="color:green;font-weight:bold;font-size:30px;"></h2>
                         </div> 
-                    </div> 
-                    <br>
-                    <br>
-                      <div class="row">
-                        
-                        <div class="col-md-12">
- 
-                            <h1 class="text-center negi" style="color:red;"></h1>
+
+                        <div class="col-md-6" style="background-color:#ECF0F1;border:5px solid white;padding:20px;">
+                            <h2 class="text-center " style="color:red;">Negativeness</h2><br>
+                            <h2 class="text-center negi" style="color:red;font-weight:bold;font-size:30px;"></h2>
                       </div>
                     
                     
                 </div>
-              
-                    <br><br>
-                    
+
                     <div class="row">
 
-                      <div class="col-md-12">
-"
-                       <h1 class="text-center">Post : <span class="respost"></span></h1>
+                      <div class="col-md-12 poscolor" style="border:5px solid white;">
+
+                       <h1 class="text-center" style="color:#566573;padding:20px;">This post is : <span class="respost" style="font-weight:bold;"></span></h1>
                            
                       </div>
                     </div>
-                    <br><br>
-                    
-            
-              
-              
-              
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6" style="padding:50px 100px 100px 100px;">
+                        <!--Div that will hold the pie chart-->
+                         <canvas id="myPieChart"></canvas>
+
+                        </div>
+
+                        <div class="col-md-6" style="padding:150px 50px 50px 50px;">
+                        <!--Div that will hold the pie chart-->
+                         <canvas id="myBarChart"></canvas>
+
+                        </div>
+
+                    </div>
+
           </div>
         </div>
     </div>            
@@ -1026,59 +993,38 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         
-        
-        <script>   $('#collapsable').on('shown.bs.collapse', function () {
-                   $("#iconi").removeClass("fa fa-chevron-up").addClass("fa fa-chevron-down");
-                });
+         <!--<script>-->
+                    <!--var ctx = document.getElementById("myChart").getContext('2d');-->
+                    <!--var data = {-->
+                                    <!--labels: [-->
+                                        <!--"Negative",-->
+                                        <!--"Positive",-->
+                                    <!--],-->
+                                    <!--datasets: [-->
+                                        <!--{-->
+                                            <!--data: [300, 50],-->
+                                            <!--backgroundColor: [-->
+                                                <!--"#EC7063",-->
+                                                <!--"#58D68D",-->
 
-                $('#collapsable').on('hidden.bs.collapse', function () {
-                   $("#iconi").removeClass("fa fa-chevron-down").addClass("fa fa-chevron-up");
-                });
-        </script>
-        
-          <!-- jQuery -->
-<!--    <script src="/vendors/jquery/dist/jquery.min.js"></script>-->
-    <!-- Bootstrap -->
-<!--    <script src="/vendors/bootstrap/dist/js/bootstrap.min.js"></script>-->
-    <!-- FastClick -->
-<!--    <script src="/vendors/fastclick/lib/fastclick.js"></script>-->
-    <!-- NProgress -->
-<!--    <script src="/vendors/nprogress/nprogress.js"></script>-->
-    <!-- Chart.js -->
-<!--    <script src="/vendors/Chart.js/dist/Chart.min.js"></script>-->
-    <!-- gauge.js -->
-<!--    <script src="/vendors/gauge.js/dist/gauge.min.js"></script>-->
-    <!-- bootstrap-progressbar -->
-<!--    <script src="/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>-->
-    <!-- iCheck -->
-<!--    <script src="/vendors/iCheck/icheck.min.js"></script>-->
-    <!-- Skycons -->
-<!--    <script src="/vendors/skycons/skycons.js"></script>-->
-    <!-- Flot -->
-<!--
-    <script src="/vendors/Flot/jquery.flot.js"></script>
-    <script src="/vendors/Flot/jquery.flot.pie.js"></script>
-    <script src="/vendors/Flot/jquery.flot.time.js"></script>
-    <script src="/vendors/Flot/jquery.flot.stack.js"></script>
-    <script src="/vendors/Flot/jquery.flot.resize.js"></script>
--->
-    <!-- Flot plugins -->
-<!--
-    <script src="/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
-    <script src="/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
-    <script src="/vendors/flot.curvedlines/curvedLines.js"></script>
--->
-    <!-- DateJS -->
-<!--    <script src="/vendors/DateJS/build/date.js"></script>-->
-    <!-- JQVMap -->
-<!--
-    <script src="/vendors/jqvmap/dist/jquery.vmap.js"></script>
-    <script src="/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
-    <script src="/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
--->
-    <!-- bootstrap-daterangepicker -->
-<!--    <script src="js/moment/moment.min.js"></script>-->
-<!--    <script src="js/datepicker/daterangepicker.js"></script>-->
+                                            <!--],-->
+                                            <!--hoverBackgroundColor: [-->
+                                                <!--"#E74C3C",-->
+                                                <!--"#28B463",-->
+
+                                            <!--]-->
+                                        <!--}]-->
+                                <!--};-->
+
+
+
+                    <!--// For a pie chart-->
+                    <!--var myPieChart = new Chart(ctx,{-->
+                        <!--type: 'pie',-->
+                        <!--data: data,-->
+
+                    <!--});-->
+              <!--</script>-->
 
     <!-- Custom Theme Scripts -->
     <script src="{% static 'PostAnalysis/js/custom.min.js' %}"></script>
