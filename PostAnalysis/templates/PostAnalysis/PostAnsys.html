@@ -98,7 +98,7 @@
                                            console.log(json["post"][0]);
                                           console.log(json["post"].length);
 
-                                          $("#posti").remove("#dupposti");
+                                          $("#dupposti").empty();
 
                                           for (i = 0; i < json["post"].length; i++) {
 
@@ -132,7 +132,9 @@
 
 
 
-
+                                         <!--$("#myPieChart").empty();-->
+                                         $('#myPieChart').remove(); // this is my <canvas> element
+                                         $('#pieid').append('<canvas id="myPieChart"><canvas>');
                                          var ctx = document.getElementById("myPieChart").getContext('2d');
 
                                          var daataa = new Array(2);
@@ -170,8 +172,10 @@
                                         });
 
 
-
-                                        var ctx = document.getElementById("myBarChart").getContext('2d');
+                                        <!--$("#myBarChart").empty();-->
+                                        $('#myBarChart').remove(); // this is my <canvas> element
+                                        $('#barid').append('<canvas id="myBarChart"><canvas>');
+                                        var btx = document.getElementById("myBarChart").getContext('2d');
                                         var BarData = {
                                                     labels: ["Negative", "Positive",],
                                                     datasets: [
@@ -206,7 +210,7 @@
                                                           }
 
                                            // For a bar chart
-                                        var myBarChart = new Chart(ctx,{
+                                        var myBarChart = new Chart(btx,{
                                             type: 'bar',
                                             data: BarData,
                                             options: options,
@@ -957,13 +961,13 @@
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-md-6" style="padding:50px 100px 100px 100px;">
+                        <div class="col-md-6" style="padding:50px 100px 100px 100px;" id="pieid">
                         <!--Div that will hold the pie chart-->
                          <canvas id="myPieChart"></canvas>
 
                         </div>
 
-                        <div class="col-md-6" style="padding:150px 50px 50px 50px;">
+                        <div class="col-md-6" style="padding:150px 50px 50px 50px;" id="barid">
                         <!--Div that will hold the pie chart-->
                          <canvas id="myBarChart"></canvas>
 
@@ -1029,4 +1033,11 @@
     <!-- Custom Theme Scripts -->
     <script src="{% static 'PostAnalysis/js/custom.min.js' %}"></script>
   </body>
+
+  <!--Git update push manual-->
+<!--git status-->
+<!--git add . -->
+<!--git commit -m "update"-->
+<!--git push origin master-->
+
 </html>
